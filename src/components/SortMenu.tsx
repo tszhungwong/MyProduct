@@ -14,6 +14,7 @@ type SortMenuProps = {
 };
 
 const sortOptions: SortOption[] = [
+  'default',
   'price-desc',
   'price-asc',
   'sales-desc',
@@ -24,12 +25,7 @@ const sortOptions: SortOption[] = [
 
 export function SortMenu({ open, value, onOpenChange, onSelect }: SortMenuProps) {
   return (
-    <InteractivePressable
-      hoverScale={1}
-      onHoverIn={() => onOpenChange(true)}
-      onHoverOut={() => onOpenChange(false)}
-      style={styles.wrap}
-    >
+    <View style={styles.wrap}>
       <InteractivePressable
         accessibilityRole="button"
         hoverScale={1.04}
@@ -60,7 +56,7 @@ export function SortMenu({ open, value, onOpenChange, onSelect }: SortMenuProps)
           })}
         </View>
       ) : null}
-    </InteractivePressable>
+    </View>
   );
 }
 

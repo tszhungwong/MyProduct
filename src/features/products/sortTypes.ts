@@ -1,4 +1,5 @@
 export type SortOption =
+  | 'default'
   | 'price-desc'
   | 'price-asc'
   | 'sales-desc'
@@ -7,6 +8,7 @@ export type SortOption =
   | 'related-asc';
 
 export const sortLabels: Record<SortOption, string> = {
+  default: 'Default',
   'price-desc': 'Price high to low',
   'price-asc': 'Price low to high',
   'sales-desc': 'Sales high to low',

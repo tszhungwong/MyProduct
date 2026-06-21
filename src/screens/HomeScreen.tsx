@@ -17,17 +17,21 @@ import { ProductCard } from '@/components/ProductCard';
 import { SortMenu } from '@/components/SortMenu';
 import { categories, featuredProduct, products } from '@/features/products/mockProducts';
 import { Product, ProductCategory } from '@/features/products/productTypes';
-import { SortOption } from '@/features/products/sortTypes';
+import { SortOption, sortLabels } from '@/features/products/sortTypes';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/spacing';
 
 export function HomeScreen() {
   const router = useRouter();
   const [sortOpen, setSortOpen] = useState(false);
-  const [sortBy, setSortBy] = useState<SortOption>('price-desc');
+  const [sortBy, setSortBy] = useState<SortOption>('default');
 
   const sortedProducts = useMemo(() => {
     const items = [...products];
+    if (sortBy === 'default') {
+      return items;
+    }
+
     const direction = sortBy.endsWith('desc') ? -1 : 1;
 
     return items.sort((a, b) => {
@@ -41,7 +45,9 @@ export function HomeScreen() {
     });
   }, [sortBy]);
 
-  const handleCartPress = () => {};
+  const handleCartPress = () => {
+    router.push('/cart' as never);
+  };
 
   const handleCategoryPress = (category: ProductCategory) => {
     void category;
@@ -67,7 +73,7 @@ export function HomeScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.header}>
-          <View>
+          <View style={styles.titleWrap}>
             <Text style={styles.kicker}>Local shop</Text>
             <Text style={styles.title}>Good goods, ready today</Text>
           </View>
@@ -101,15 +107,18 @@ export function HomeScreen() {
               />
             ))}
           </ScrollView>
-          <SortMenu
-            open={sortOpen}
-            onOpenChange={setSortOpen}
-            onSelect={(option) => {
-              handleSortSelect(option);
-              setSortOpen(false);
-            }}
-            value={sortBy}
-          />
+          <View style={styles.sortGroup}>
+            <Text style={styles.sortLabel}>{sortLabels[sortBy]}</Text>
+            <SortMenu
+              open={sortOpen}
+              onOpenChange={setSortOpen}
+              onSelect={(option) => {
+                handleSortSelect(option);
+                setSortOpen(false);
+              }}
+              value={sortBy}
+            />
+          </View>
         </View>
 
         <Text style={styles.sectionTitle}>Popular products</Text>
@@ -158,6 +167,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     gap: spacing.lg,
   },
+  titleWrap: {
+    flex: 1,
+    minWidth: 0,
+  },
   kicker: {
     color: colors.brand,
     fontSize: 13,
@@ -165,8 +178,8 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   title: {
-    maxWidth: 270,
     color: colors.ink,
+    flexShrink: 1,
     fontSize: 30,
     fontWeight: '900',
     lineHeight: 36,
@@ -212,6 +225,17 @@ const styles = StyleSheet.create({
   },
   categoryScroller: {
     flex: 1,
+  },
+  sortGroup: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.sm,
+  },
+  sortLabel: {
+    color: colors.muted,
+    fontSize: 13,
+    fontWeight: '800',
+    textAlign: 'right',
   },
   sectionTitle: {
     color: colors.ink,
